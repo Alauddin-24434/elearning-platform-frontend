@@ -6,6 +6,7 @@ import { useLoginUserMutation } from "@/redux/features/auth/authApi"; // hypothe
 import { useDispatch } from "react-redux";
 import { setCredintials } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface LoginFormData {
   email: string;
@@ -15,7 +16,9 @@ interface LoginFormData {
 export default function LoginPage() {
   const [loginUser] = useLoginUserMutation(); // assuming you have this in your redux slice
   const dispatch = useAppDispatch()
-
+  const searhcParamas = useSearchParams();
+  const redirect = searhcParamas.get("redirect") || "/";
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -25,8 +28,9 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const res = await loginUser(data).unwrap();
-      console.log(res);
+ 
       dispatch(setCredintials({ user: res?.data?.user, token: res?.data?.accessToken }))
+      router.replace(redirect)
     } catch (error) {
       console.log(error);
     }

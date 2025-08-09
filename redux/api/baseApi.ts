@@ -15,7 +15,7 @@ interface IRefreshResponse {
 const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: '/api',
+  baseUrl: 'http://localhost:5000/api',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).learningAuth.token;
@@ -90,7 +90,8 @@ const baseApi = createApi({
     'Lession',
     'Dashboard',
     'Payment',
-    'Category'
+    'Category',
+    'Enrollment'
   ],
   endpoints: () => ({}),
 });

@@ -8,9 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useParams, useRouter } from "next/navigation"
 import { useSelector } from "react-redux"
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
-import Link from "next/link"
+import { useEnrollCourseMutation } from "@/redux/features/enrollment/enrollmentApi"
 
-// Define the Course type based on the provided JSON structure
 interface Course {
   id: string
   title: string
@@ -23,11 +22,13 @@ interface Course {
   createdAt: string
   updatedAt: string
   couponId: string | null
+  features?: string[]
+  overviews?: string[]
+  stack?: string[]
   author: {
     id: string
     name: string
     email: string
-    password: string
     avatar: string | null
     isAdmin: boolean
     isActive: boolean
@@ -56,13 +57,14 @@ interface Course {
 }
 
 export default function CourseDetails() {
-  const {slug}= useParams();
-   const [course, setCourse] = useState<any>(null)
+  const { slug } = useParams()
+  const [course, setCourse] = useState<Course | null>(null)
   const [enrolled, setEnrolled] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const user = useSelector(selectCurrentUser)
   const router = useRouter()
+  const [enrollCourse, { isLoading: enrolling }] = useEnrollCourseMutation()
 
   useEffect(() => {
     if (!slug) return
@@ -79,8 +81,6 @@ export default function CourseDetails() {
           (enrollment: any) => enrollment.userId === user?.id
         )
         setEnrolled(isUserEnrolled)
-
-       
       } catch (err: any) {
         setError(err.message || "An error occurred")
       } finally {
@@ -89,25 +89,31 @@ export default function CourseDetails() {
     }
 
     fetchCourse()
-  }, [slug, user?.id, router])
+  }, [slug, user?.id])
+
+  const handleEnroll = async () => {
+    if (!user) {
+      alert("Please login to enroll")
+      return
+    }
+
+    if (course?.isFree) {
+      const body={ userId: user.id, courseId: course.id }
+      try {
+        await enrollCourse(body).unwrap()
+        alert("Enrolled successfully!")
+        setEnrolled(true)
+      } catch (error) {
+        alert("Enrollment failed, please try again.")
+      }
+    } else {
+      router.push(`/checkout/${slug}`)
+    }
+  }
 
   if (loading) return <p className="text-center py-10">Loading course details...</p>
   if (error) return <p className="text-center py-10 text-red-500">{error}</p>
   if (!course) return <p className="text-center py-10">Course not found.</p>
-
-
-  const courseOverviewTopics = [
-    "Introduction to Web Technologies",
-    "Hands-on projects to build your portfolio",
-    "Understanding Frontend Frameworks (React, Vue, Angular)",
-    "Backend Development with Node.js and Express",
-    "Database Management (SQL, NoSQL)",
-    "Deployment and Hosting Strategies",
-    "Version Control with Git and GitHub",
-    "API Design and Integration",
-  ]
-
-  const technologies = ["HTML", "CSS", "Javascript", "React", "Node.js", "Git", "Rest API's", "Express"]
 
   return (
     <div className="bg-white">
@@ -121,42 +127,46 @@ export default function CourseDetails() {
               <span className="text-gray-600 text-sm font-medium">5.0 (976 reviews)</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              {course.category.name}
+              {course.title}
             </h1>
             <p className="text-lg text-gray-700 max-w-xl">
               {course.description}
             </p>
+
             <div className="grid grid-cols-2 gap-4 text-gray-800 font-medium">
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Comprehensive Curriculum</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Expert Instructors</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Hands-On Projects</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Career-Ready Skills</span>
-              </div> 
+              {course.features?.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-green-500" />
+                  <span>{feature}</span>
+                </div>
+              ))}
             </div>
+
             <div className="flex gap-4 pt-4">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-md text-lg font-semibold">
-                {enrolled ? "Continue Course" : <span><Link href={`/checkout/${slug}`}> Enroll Now</Link></span>}
+              <Button
+                onClick={handleEnroll}
+                disabled={enrolling || enrolled}
+                className={`px-8 py-3 rounded-md text-lg font-semibold ${
+                  enrolled
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-orange-500 hover:bg-orange-600 text-white"
+                }`}
+              >
+                {enrolled ? "Continue Course" : enrolling ? "Enrolling..." : "Enroll Now"}
               </Button>
-              <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50 hover:text-orange-600 px-8 py-3 rounded-md text-lg font-semibold">
+              <Button
+                variant="outline"
+                className="border-orange-500 text-orange-500 hover:bg-orange-50 hover:text-orange-600 px-8 py-3 rounded-md text-lg font-semibold"
+              >
                 See Curriculum
               </Button>
             </div>
           </div>
+
           <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg">
             <Image
-              src="/courseSetails.png"
-              alt="Course Thumbnail"
+              src={course.thumbnail}
+              alt={`${course.title} Thumbnail`}
               layout="fill"
               objectFit="cover"
               className="rounded-xl"
@@ -178,22 +188,27 @@ export default function CourseDetails() {
       <section className="container mx-auto px-4 py-8 md:py-12">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-gray-100 rounded-lg p-1">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md px-4 text-base font-medium">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md px-4 text-base font-medium"
+            >
               Overview
             </TabsTrigger>
 
-            <TabsTrigger value="testimonials" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md px-4  text-base font-medium">
+            <TabsTrigger
+              value="testimonials"
+              className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md px-4 text-base font-medium"
+            >
               Testimonials
             </TabsTrigger>
-
           </TabsList>
+
           <TabsContent value="overview" className="mt-8 grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-8">
-
               <div className="space-y-4">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Course Overview</h2>
                 <ul className="space-y-3 text-gray-700">
-                  {courseOverviewTopics.map((topic, index) => (
+                  {course.overviews?.map((topic, index) => (
                     <li key={index} className="flex items-start gap-2">
                       <CheckCircle className="w-5 h-5 text-orange-500 shrink-0" />
                       <span>{topic}</span>
@@ -202,11 +217,12 @@ export default function CourseDetails() {
                 </ul>
               </div>
             </div>
+
             <div className="lg:col-span-1 space-y-8">
               <div className="space-y-4">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Stack</h2>
                 <div className="flex flex-wrap gap-2">
-                  {technologies.map((tech, index) => (
+                  {course.stack?.map((tech, index) => (
                     <span
                       key={index}
                       className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-800"
@@ -216,6 +232,7 @@ export default function CourseDetails() {
                   ))}
                 </div>
               </div>
+
               <div className="space-y-4">
                 <h2 className="sr-only">Course Statistics</h2>
                 <div className="grid grid-cols-2 gap-4 text-gray-700">
@@ -243,15 +260,10 @@ export default function CourseDetails() {
               </div>
             </div>
           </TabsContent>
-          {/* Other TabsContent components would go here */}
-          <TabsContent value="course-info">
-            <p className="py-10 text-center text-gray-500">Course Info content coming soon...</p>
-          </TabsContent>
 
           <TabsContent value="testimonials">
             <p className="py-10 text-center text-gray-500">Testimonials content coming soon...</p>
           </TabsContent>
-
         </Tabs>
       </section>
     </div>

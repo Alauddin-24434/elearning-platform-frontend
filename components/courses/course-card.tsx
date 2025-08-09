@@ -10,12 +10,8 @@ interface CourseCardProps {
     thumbnail?: string
     price: number
     isFree: boolean
-    author?: {
-      name?: string
-    }
-    category?: {
-      name?: string
-    }
+    author?: { name?: string }
+    category?: { name?: string }
     lessons?: { id: string }[]
     enrollments?: { id: string }[]
   }
@@ -26,44 +22,48 @@ export default function CourseCard({ course }: CourseCardProps) {
   const studentCount = course.enrollments?.length ?? 0
 
   return (
-    <Card className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <Card className="overflow-hidden rounded-none p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[400px]">
       <Link href={`/courses/${course.id}`}>
+        
         {/* Thumbnail */}
-        <div className="relative w-full h-48">
+        <div className="relative w-full h-64 overflow-hidden">
           <Image
             src={course.thumbnail || "/placeholder.svg"}
             alt={course.title}
             fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 400px"
           />
-          <div className="absolute top-4 right-4 bg-primary-green text-white px-3 py-1 rounded-full text-sm font-semibold">
+          <div className="absolute top-5 right-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full text-base font-bold shadow-md">
             {course.isFree ? "Free" : `$${course.price.toFixed(2)}`}
           </div>
         </div>
 
         {/* Course Info */}
-        <CardContent className="p-6 space-y-3">
-          <div className="text-sm font-semibold text-gray-500 uppercase">
+        <CardContent className="p-4 space-y-2">
+          <div className="text-sm font-semibold text-green-600 uppercase tracking-wider">
             {course.category?.name || "Uncategorized"}
           </div>
-          <h3 className="text-xl font-bold text-gray-800 line-clamp-2">{course.title}</h3>
-          <p className="text-gray-600 text-sm">
+          <h3 className="text-xl font-extrabold text-gray-900 leading-snug line-clamp-2">
+            {course.title}
+          </h3>
+          <p className="text-gray-500 text-base">
             By {course.author?.name || "Unknown Instructor"}
           </p>
         </CardContent>
 
         {/* Footer */}
-        <CardFooter className="flex items-center justify-between p-6 border-t text-gray-600 text-sm">
-          <div className="flex items-center gap-1">
-            <BookOpen className="w-4 h-4" />
+        <CardFooter className="flex items-center justify-between p-8 border-t border-gray-100 text-gray-600 text-base bg-gray-50">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-green-500" />
             <span>{lessonCount} {lessonCount === 1 ? "Lesson" : "Lessons"}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Users className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-green-500" />
             <span>{studentCount} {studentCount === 1 ? "Student" : "Students"}</span>
           </div>
         </CardFooter>
+
       </Link>
     </Card>
   )

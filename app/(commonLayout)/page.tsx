@@ -1,9 +1,9 @@
-import HeroSection from "@/components/home/hero-section"
-import { BenefitsSection } from "@/components/home/benifits-section"
+import HeroSection from "@/components/home-related/hero-section"
+import { BenefitsSection } from "@/components/home-related/benifits-section"
 
-import PopularCoursesSection from "@/components/home/popular-courses-section"
+import PopularCoursesSection from "@/components/home-related/popular-courses-section"
 
-import TrustedBySection from "@/components/home/trastedBySection"
+import TrustedBySection from "@/components/home-related/trastedBySection"
 
 
 export default function HomePage() {

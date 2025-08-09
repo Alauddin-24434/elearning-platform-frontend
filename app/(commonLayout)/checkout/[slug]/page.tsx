@@ -16,7 +16,7 @@ export default function CheckoutPage() {
   const [createPayment, { isLoading }] = useCreatePaymentMutation()
 
   const user = useSelector(selectCurrentUser)
-  console.log(user)
+
   const userId = user?.id
   console.log(userId)
 
@@ -58,6 +58,7 @@ export default function CheckoutPage() {
 
     try {
       const response = await createPayment(payload).unwrap()
+      console.log(response)
 
       // Assuming response.url is the payment redirect URL
       if (response?.url) {

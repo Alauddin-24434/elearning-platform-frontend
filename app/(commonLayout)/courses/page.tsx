@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import CourseCard from "@/components/courses/course-card";
+import CourseCard from "@/components/courses-related/course-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, List, Grid2X2 } from "lucide-react";
@@ -59,23 +59,14 @@ export default function CourseList() {
   const totalPages = data?.totalPages || 1;
 
   return (
-    <section className="py-16 md:py-24 bg-white">
-      {/* Breadcrumbs */}
-      <div className="mb-4 text-sm text-gray-600">
-        <Link href="/" className="hover:underline">
-          Home
-        </Link>{" "}
-        /{" "}
-        <Link href="/courses" className="hover:underline">
-          All Courses
-        </Link>
-      </div>
+    <section className="py-16 md:py-24 ">
+    
 
       <div className="container mx-auto px-6 md:px-10">
         {/* 🔹 Filters */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
           {/* Search */}
-          <div className="relative w-full md:w-1/3">
+          <div className="relative w-full">
             <Input
               type="text"
               placeholder="Search courses..."

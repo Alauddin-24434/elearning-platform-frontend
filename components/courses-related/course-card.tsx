@@ -22,28 +22,27 @@ export default function CourseCard({ course }: CourseCardProps) {
   const studentCount = course.enrollments?.length ?? 0
 
   return (
-    <Card className="overflow-hidden rounded-none p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[400px]">
+    <Card className="overflow-hidden rounded-none p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[300px]">
       <Link href={`/courses/${course.id}`}>
         
         {/* Thumbnail */}
-        <div className="relative w-full h-64 overflow-hidden">
+        <div className="relative w-full h-40 overflow-hidden ">
           <Image
             src={course.thumbnail || "/placeholder.svg"}
             alt={course.title}
             fill
-            className="object-cover transition-transform duration-500 hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 400px"
+    
           />
-          <div className="absolute top-5 right-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full text-base font-bold shadow-md">
+          <div className="absolute top-5 right-5 bg-[#d5d52b] text-[#313e3b]  px-2 py-1 rounded-full text-xs font-bold shadow-md">
             {course.isFree ? "Free" : `$${course.price.toFixed(2)}`}
           </div>
         </div>
 
         {/* Course Info */}
         <CardContent className="p-4 space-y-2">
-          <div className="text-sm font-semibold text-green-600 uppercase tracking-wider">
+          {/* <div className="text-sm font-semibold text-green-600 uppercase tracking-wider">
             {course.category?.name || "Uncategorized"}
-          </div>
+          </div> */}
           <h3 className="text-xl font-extrabold text-gray-900 leading-snug line-clamp-2">
             {course.title}
           </h3>
@@ -53,7 +52,7 @@ export default function CourseCard({ course }: CourseCardProps) {
         </CardContent>
 
         {/* Footer */}
-        <CardFooter className="flex items-center justify-between p-8 border-t border-gray-100 text-gray-600 text-base bg-gray-50">
+        <CardFooter className="flex items-center justify-between p-4 border-t border-gray-100 text-gray-600 text-base bg-gray-50">
           <div className="flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-green-500" />
             <span>{lessonCount} {lessonCount === 1 ? "Lesson" : "Lessons"}</span>

@@ -42,7 +42,7 @@ const adminNavItems = [
 // User navigation items
 const userNavItems = [
   { title: "Overview", url: "/dashboard", icon: Home },
-  { title: "My Courses", url: "/dashboard/user/courses", icon: BookOpen },
+  { title: "Course Management", url: "/dashboard/user/courses", icon: BookOpen },
   { title: "Enrolments", url: "/dashboard/user/enrolments", icon: Calendar },
   { title: "Settings", url: "/dashboard/settings", icon: Settings },
 ]

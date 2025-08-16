@@ -30,14 +30,14 @@ export function BenefitsSection() {
   ]
 
   return (
-    <section className=" py-20 bg-white">
+    <section className=" py-20 text-white">
       <div className="container mx-auto px-4">
         {/* Header Section (Not card styled) */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#313e3b]  mb-4">
+          <h2 className="text-4xl md:text-5xl font-extrabold  mb-4">
             How to Get More Benefits 
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg  max-w-2xl mx-auto">
             Unlock your full potential with our structured learning path, designed to guide you from enrollment to certification.
           </p>
         </div>
@@ -51,15 +51,15 @@ export function BenefitsSection() {
             >
               <CardHeader className=" flex flex-col items-center ">
                 {/* <div className="text-4xl font-bold text-v0-yellow mb-4">{benefit.number}</div> */}
-                <div className="p-3 rounded-full text-[#d5d52b] bg-[#00362f]   mb-4">
+                <div className="p-3 rounded-full   mb-4">
                   {benefit.icon}
                 </div>
-                <CardTitle className="text-center text-xl font-semibold text-[#313e3b] mb-2">
+                <CardTitle className="text-center text-xl font-semibold mb-2">
                   {benefit.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-center text-gray-600 text-sm">
+                <p className="text-center  text-sm">
                   {benefit.description}
                 </p>
               </CardContent>

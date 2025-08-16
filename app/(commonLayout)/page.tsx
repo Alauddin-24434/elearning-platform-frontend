@@ -10,11 +10,12 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <TrustedBySection/>
-      <PopularCoursesSection />
-      <BenefitsSection/>
 
-   
+      <PopularCoursesSection />
+      <BenefitsSection />
+      <TrustedBySection />
+
+
     </>
   )
 }

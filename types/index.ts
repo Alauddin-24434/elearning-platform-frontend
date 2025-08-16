@@ -20,21 +20,51 @@ export interface Category {
 }
 
 export interface Course {
-    id: string;
-    title: string;
-    description: string;
-    thumbnail?: string;
-    price: number;
-    isFree: boolean;
-    authorId: string;
-    categoryId: string;
-    features: string[];
-    overviews: string[];
-    stack: string[];
-    createdAt: Date;
-    updatedAt: Date;
-    // Assuming coupons are linked to courses for seller view
-    coupons?: Coupon[];
+  id: string
+  title: string
+  description: string
+  thumbnail: string
+  price: number
+  isFree: boolean
+  authorId: string
+  categoryId: string
+  createdAt: string
+  updatedAt: string
+  couponId: string | null
+  features: string[]
+  overviews: string[]
+  stack: string[]
+  overviewVideo: string   // ✅ Added
+  author: {
+    id: string
+    name: string
+    email: string
+    avatar: string | null
+    isAdmin: boolean
+    isActive: boolean
+    createdAt: string
+    updatedAt: string
+  }
+  category: {
+    id: string
+    name: string
+  }
+  lessons: {
+    id: string
+    title: string
+    duration: string
+    video: string
+    courseId: string
+    createdAt: string
+    updatedAt: string
+  }[]
+  enrollments: {
+    id: string
+    userId: string
+    courseId: string
+    enrolledAt: string
+  }[]
+  
 }
 
 export interface Enrollment {
@@ -59,14 +89,7 @@ export interface Payment {
     paidAt: Date;
 }
 
-export interface Coupon {
-    id: string;
-    code: string;
-    discount: number;
-    expiresAt: Date;
-    isActive: boolean;
-    createdAt: Date;
-}
+
 
 export interface Review {
     id: string;

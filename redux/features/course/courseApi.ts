@@ -32,7 +32,7 @@ const courseApi = baseApi.injectEndpoints({
 
     getMyCourses: build.query({
       query: () => ({
-        url: '/courses',
+        url: '/courses/my-courses',
         method: 'GET',
       }),
       providesTags: ['Course'],
@@ -64,8 +64,8 @@ const courseApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: (_result, _error, { id }) => [
-        { type: 'Course', id },
+      invalidatesTags: [
+        
         'Course',
       ],
     }),
@@ -76,8 +76,8 @@ const courseApi = baseApi.injectEndpoints({
         url: `/courses/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'Course', id },
+      invalidatesTags:[
+      
         'Course',
       ],
     }),

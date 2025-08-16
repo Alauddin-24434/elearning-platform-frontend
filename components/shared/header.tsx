@@ -18,43 +18,14 @@ export default function Header() {
   const dispatch = useDispatch()
 
   return (
-    <header className="bg-[#00483d] text-white">
-      {/* 🔹 Top Header */}
-      <div className="px-4 py-2 flex justify-between items-center text-sm border-b border-white/20 bg-primary text-white">
-        <div className="flex container mx-auto justify-between items-center gap-4">
-          {/* 🔸 Left side: Contact Info */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              <span>1 800 222 000</span>
-            </div>
-            <div className="hidden md:flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              <span>info@example.com</span>
-            </div>
-          </div>
-
-          {/* 🔸 Right side: */}
-          <div className="flex items-center gap-3">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="hover:text-yellow-400">
-              <FacebookIcon className="w-4 h-4" />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-yellow-400">
-              <TwitterIcon className="w-4 h-4" />
-            </a>
-            <button className="border border-white text-white px-3 py-1 rounded hover:bg-yellow-400 hover:text-black text-xs">
-              Contact Us
-            </button>
-          </div>
-
-        </div>
-      </div>
+    <header className="bg-gray-800 border-b border-gray-700 text-white">
+     
 
       {/* 🔹 Main Header */}
       <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-extrabold text-[#d5d52b]">
-          learning
+        <Link href="/" className="text-2xl font-extrabold text-green-600">
+       Learning Hub
         </Link>
 
         

@@ -8,7 +8,7 @@ export default function StudentTestimonialSection() {
   const featuredTestimonial = testimonials[0] // Using the first testimonial as the main one
 
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className="py-16 md:py-24 ">
       <div className="max-w-7xl mx-auto px-6 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="relative">
           <Image

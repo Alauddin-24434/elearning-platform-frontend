@@ -24,7 +24,7 @@ export default function CheckoutPage() {
     const fetchCourse = async () => {
       try {
         setLoading(true)
-        const res = await fetch(`http://localhost:5000/api/courses/${slug}`)
+        const res = await fetch(`https://learning-platform-backend-production-839d.up.railway.app/api/courses/${slug}`)
         if (!res.ok) throw new Error("Failed to fetch course details")
         const data = await res.json()
         setCourse(data?.data)

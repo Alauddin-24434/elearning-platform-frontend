@@ -15,7 +15,7 @@ interface IRefreshResponse {
 const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://learning-platform-backend-production-839d.up.railway.app/api',
+  baseUrl: 'http://localhost:5000/api',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).learningAuth.token;

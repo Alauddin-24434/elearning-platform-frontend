@@ -143,6 +143,9 @@ importers:
       react-chartjs-2:
         specifier: ^5.3.0
         version: 5.3.0(chart.js@4.5.0)(react@19.1.1)
+      react-circular-progressbar:
+        specifier: ^2.2.0
+        version: 2.2.0(react@19.1.1)
       react-day-picker:
         specifier: 9.8.0
         version: 9.8.0(react@19.1.1)
@@ -1734,6 +1737,11 @@ packages:
     peerDependencies:
       chart.js: ^4.1.1
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  react-circular-progressbar@2.2.0:
+    resolution: {integrity: sha512-cgyqEHOzB0nWMZjKfWN3MfSa1LV3OatcDjPz68lchXQUEiBD5O1WsAtoVK4/DSL0B4USR//cTdok4zCBkq8X5g==}
+    peerDependencies:
+      react: '>=0.14.0'
 
   react-day-picker@9.8.0:
     resolution: {integrity: sha512-E0yhhg7R+pdgbl/2toTb0xBhsEAtmAx1l7qjIWYfcxOy8w4rTSVfbtBoSzVVhPwKP/5E9iL38LivzoE3AQDhCQ==}
@@ -3619,6 +3627,10 @@ snapshots:
   react-chartjs-2@5.3.0(chart.js@4.5.0)(react@19.1.1):
     dependencies:
       chart.js: 4.5.0
+      react: 19.1.1
+
+  react-circular-progressbar@2.2.0(react@19.1.1):
+    dependencies:
       react: 19.1.1
 
   react-day-picker@9.8.0(react@19.1.1):

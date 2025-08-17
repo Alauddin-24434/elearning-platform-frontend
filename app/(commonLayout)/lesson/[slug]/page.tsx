@@ -38,7 +38,7 @@ export default function LearnPage() {
     const fetchLessons = async () => {
       try {
         setLoading(true)
-        const res = await fetch(`http://localhost:5000/api/lessons/${slug}`, {
+        const res = await fetch(`https://learning-platform-backend-production-839d.up.railway.app/api/lessons/${slug}`, {
           headers: {
             "Content-Type": "application/json",
             authorization: `${token}`,
@@ -99,7 +99,7 @@ export default function LearnPage() {
   const updateProgress = async () => {
     if (!currentLesson) return
     try {
-      await fetch("http://localhost:5000/api/lessons/progress", {
+      await fetch("https://learning-platform-backend-production-839d.up.railway.app/api/lessons/progress", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

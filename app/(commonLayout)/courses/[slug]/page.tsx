@@ -41,7 +41,7 @@ export default function CourseDetails() {
 
         // 🔹 Fetch course details from API
         const res = await fetch(
-          `http://localhost:5000/api/courses/${slug}`
+          `https://learning-platform-backend-production-839d.up.railway.app/api/courses/${slug}`
         )
         if (!res.ok) throw new Error("Failed to fetch course details")
 

@@ -30,12 +30,12 @@ export function BenefitsSection() {
   ]
 
   return (
-    <section className=" py-20 text-white">
+    <section className=" py-16 text-white">
       <div className="container mx-auto px-4">
         {/* Header Section (Not card styled) */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold  mb-4">
-            How to Get More Benefits 
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight">
+            How to Get More Benefits
           </h2>
           <p className="text-lg  max-w-2xl mx-auto">
             Unlock your full potential with our structured learning path, designed to guide you from enrollment to certification.

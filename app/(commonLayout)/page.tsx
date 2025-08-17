@@ -3,7 +3,6 @@ import { BenefitsSection } from "@/components/home-related/benifits-section"
 
 import PopularCoursesSection from "@/components/home-related/popular-courses-section"
 
-import TrustedBySection from "@/components/home-related/trastedBySection"
 
 
 export default function HomePage() {
@@ -13,7 +12,6 @@ export default function HomePage() {
 
       <PopularCoursesSection />
       <BenefitsSection />
-      <TrustedBySection />
 
 
     </>

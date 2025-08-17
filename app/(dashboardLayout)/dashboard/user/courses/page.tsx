@@ -288,7 +288,7 @@ export default function MyCourses() {
         formData.append("courseId", courseId)
         formData.append("video", data.video[0]) // multer will pick this
 
-        const res = await fetch("http://localhost:5000/api/lessons", {
+        const res = await fetch("https://learning-platform-backend-production-839d.up.railway.app/api/lessons", {
           method: "POST",
           body: formData,
         })

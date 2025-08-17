@@ -22,7 +22,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   const studentCount = course.enrollments?.length ?? 0
 
   return (
-    <Card className="overflow-hidden rounded-none p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[300px]">
+    <Card className="overflow-hidden rounded-xl p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[300px]">
       <Link href={`/courses/${course.id}`}>
         
         {/* Thumbnail */}

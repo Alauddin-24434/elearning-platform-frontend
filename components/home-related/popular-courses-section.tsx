@@ -1,47 +1,41 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { Button } from "../ui/button"
 import { useGetAllCoursesQuery } from "@/redux/features/course/courseApi"
 import CourseCard from "../courses-related/course-card"
 import { Course } from "@/types"
+import { CourseCardSkeleton } from "../courses-related/course-card-skeleton"
 
 export default function PopularCoursesSection() {
   const { data, error, isLoading } = useGetAllCoursesQuery(undefined)
 
-  if (isLoading) return <p>Loading...</p>
-  if (error) return <p>Error loading courses</p>
+  const courses = data?.data?.courses || []
 
- 
-  const courses = data?.data?.courses|| []
+  // Skeleton Card Array (to show while loading)
+  const skeletons = Array(6).fill(0)
+
   return (
-    <section className=" py-20 text-white">
-      <div className="container mx-auto ">
-        <div className="flex flex-col md:flex-row items-center justify-between mb-16 text-center md:text-left">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-extrabold"
-          >
-            Discover Our Popular Courses
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Button asChild variant="link" className="hover:underline text-2xl font-semibold">
-              <Link href="/courses">View All Courses →</Link>
-            </Button>
-          </motion.div>
+    <section className="py-16 bg-gray-900 text-white">
+      <div className="container mx-auto px-4">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row items-center justify-between mb-12 text-center md:text-left gap-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight">
+            Explore Popular Courses
+          </h2>
+          <Button asChild variant="link" className="hover:underline text-lg sm:text-xl font-semibold">
+            <Link href="/courses">View All Courses →</Link>
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {courses.map((course:Course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
+        {/* Courses Carousel / Grid */}
+        <div className="relative">
+          <div className="flex overflow-x-auto space-x-6 md:space-x-8 pb-4 snap-x snap-mandatory">
+            {isLoading
+              ? skeletons.map((_, idx) => <CourseCardSkeleton key={idx} />)
+              : courses.map((course: Course) => <CourseCard key={course.id} course={course} />)}
+
+          </div>
         </div>
       </div>
     </section>

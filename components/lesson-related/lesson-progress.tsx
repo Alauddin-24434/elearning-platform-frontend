@@ -12,7 +12,7 @@ interface LessonProgressProps {
 export default function LessonProgress({ completedLessons, totalLessons, progressPercentage, totalDuration }: LessonProgressProps) {
   return (
     <div className="bg-gray-800 border-t border-gray-700 p-6 mt-2 md:mt-4 rounded-xl">
-      <h3 className="text-lg font-semibold text-green-500 mb-4">Course Progress</h3>
+      <h3 className="text-lg font-semibold  mb-4">Course Progress</h3>
 
       <div className="flex items-center justify-center">
         <div className="w-32 h-32">

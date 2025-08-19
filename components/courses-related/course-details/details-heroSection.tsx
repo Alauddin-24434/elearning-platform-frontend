@@ -28,8 +28,8 @@ const CourseDetailsHero = ({
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
 
   return (
-    <section className="relative overflow-hidden text-white">
-      <div className="relative px-4 py-10 md:py-16 lg:py-16 container mx-auto">
+    <section className="relative overflow-hidden text-white  container mx-auto">
+      <div className="relative px-4 py-10 md:py-16 lg:py-16 ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* =========================
               LEFT CONTENT: Title, Description, Stats, Buttons
@@ -38,7 +38,7 @@ const CourseDetailsHero = ({
             {/* Rating */}
             <div className="flex flex-wrap items-center gap-3">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                <Star key={i} className="w-5 h-5 fill-[#d8a111] text-[#d8a111]" />
               ))}
               <span className="ml-2 text-sm md:text-base text-white/90 font-medium">
                 4.9 (1,247 reviews)
@@ -58,13 +58,13 @@ const CourseDetailsHero = ({
             {/* Stats */}
             <div className="flex flex-wrap gap-6 text-white/90">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
+                <Users className="w-5 h-5 text-[#D8A111]" />
                 <span className="font-medium text-sm sm:text-base">
                   {course.enrollments?.length?.toLocaleString() ?? 0} students
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
+                <BookOpen className="w-5 h-5 text-[#D8A111]" />
                 <span className="font-medium text-sm sm:text-base">
                   {course.lessons?.length ?? 0} lessons
                 </span>
@@ -76,9 +76,9 @@ const CourseDetailsHero = ({
               {!enrolled && (
                 <Button
                   onClick={onEnroll}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2"
+                  className="bg-[#d8a111] hover:bg-[#C18F10] cursor-pointer text-[#100d28] px-6 py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2"
                 >
-                  <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5 " />
                   Enroll Now - ${course.price}
                 </Button>
               )}
@@ -87,16 +87,16 @@ const CourseDetailsHero = ({
                 <Button
                   onClick={onContinue}
                   variant="outline"
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2"
+                  className="bg-[#d8a111] hover:bg-[#C18F10] cursor-pointer text-[#100d28] px-6 py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold flex items-center gap-2"
                 >
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 " />
                   Continue Learning
                 </Button>
               )}
 
               <Button
                 variant="outline"
-                className="px-6 py-3 rounded-lg bg-gray-900 text-sm sm:text-base md:text-lg font-semibold hover:bg-gray-800 flex items-center gap-2"
+                className="px-6 py-3 rounded-lg bg-transparent cursor-pointer text-sm sm:text-base md:text-lg font-semibold hover:bg-[#080613] flex items-center gap-2"
               >
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 What You'll Learn
@@ -109,7 +109,7 @@ const CourseDetailsHero = ({
               Fully responsive with aspect ratio
           ========================== */}
           <div className="w-full flex justify-center lg:justify-end mt-8 lg:mt-0">
-            <Card className="bg-gray-900 p-2 sm:p-4 border-none w-full max-w-xl">
+            <Card className="bg-[#080613] p-2 sm:p-4 border-none w-full max-w-xl">
               <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
                 {activeVideo ? (
                   <ReactPlayer
@@ -127,13 +127,13 @@ const CourseDetailsHero = ({
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="absolute inset-0  flex items-center justify-center">
                       <Button
                         size="icon"
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-900 hover:bg-green-900 hover:scale-110 transition-all duration-300"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#D8A111] hover:bg-[#97700C] hover:scale-110 cursor-pointer transition-all duration-300"
                         onClick={() => setActiveVideo(course.overviewVideo || "")}
                       >
-                        <Play className="w-6 h-6 sm:w-12 sm:h-12 text-white" />
+                        <Play className="w-6 h-6 sm:w-12 sm:h-12 text-[#100d28]" />
                       </Button>
                     </div>
                   </>

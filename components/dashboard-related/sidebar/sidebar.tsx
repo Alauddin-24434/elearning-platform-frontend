@@ -2,12 +2,10 @@
 
 import type * as React from "react"
 import {
-  BarChart3,
   Users,
-  Car,
+  Layers,
   Calendar,
   Settings,
-  User,
   BookOpen,
   DollarSign,
   Shield,
@@ -35,7 +33,7 @@ import { selectCurrentUser } from "@/redux/features/auth/authSlice"
 const adminNavItems = [
   { title: "Overview", url: "/dashboard", icon: Home },
   { title: "User Management", url: "/dashboard/admin/users", icon: Users },
-  { title: "Category Management", url: "/dashboard/admin/category", icon: Car },
+  { title: "Category Management", url: "/dashboard/admin/category", icon: Layers },
   { title: "Payments Management", url: "/dashboard/admin/payments", icon: DollarSign },
 ]
 
@@ -44,7 +42,7 @@ const userNavItems = [
   { title: "Overview", url: "/dashboard", icon: Home },
   { title: "Course Management", url: "/dashboard/user/courses", icon: BookOpen },
   { title: "Enrolments", url: "/dashboard/user/enrolments", icon: Calendar },
-  { title: "Settings", url: "/dashboard/settings", icon: Settings },
+  
 ]
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
@@ -56,26 +54,33 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const navItems = user.isAdmin ? adminNavItems : userNavItems
 
   return (
-    <Sidebar collapsible="icon" {...props} className="bg-[#00362f] text-white">
-      <SidebarHeader className="text-center h-16">
+    <Sidebar collapsible="icon" {...props} className="bg-[#100D28] text-white">
+      {/* Sidebar Header with logo only */}
+      <SidebarHeader className="flex justify-center items-center h-16">
         <Link href="/">
-          <span className="truncate font-semibold uppercase">Elearning</span>
+          <img
+            src="/logo.png" 
+            alt="Logo"
+            className="h-10 w-auto"
+          />
         </Link>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarMenu>
           {navItems.map((item) => {
-            const isActive = pathname === item.url || pathname.startsWith(item.url)
+            const isActive =
+              item.url === "/dashboard"
+                ? pathname === item.url
+                : pathname === item.url || pathname.startsWith(item.url)
+
             return (
               <SidebarMenuItem
                 key={item.title}
-                className={`hover:bg-[#006d5d] ${
-                  isActive ? "bg-[#006d5d]" : ""
-                }`}
+                className={`hover:bg-[#241D59] ${isActive ? "bg-[#241D59]" : ""}`}
               >
                 <SidebarMenuButton asChild>
-                  <Link href={item.url}>
+                  <Link href={item.url} className="flex items-center">
                     <item.icon className="mr-2 h-4 w-4" />
                     <span>{item.title}</span>
                   </Link>

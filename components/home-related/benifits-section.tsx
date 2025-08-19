@@ -30,7 +30,7 @@ export function BenefitsSection() {
   ]
 
   return (
-    <section className=" py-16 text-white">
+    <section className=" py-16 bg-[#d3dae4] text-[#100d28] ">
       <div className="container mx-auto px-4">
         {/* Header Section (Not card styled) */}
         <div className="text-center mb-12">

@@ -8,7 +8,7 @@ const dashboardApi = baseApi.injectEndpoints({
   
     getOverViews: build.query({
       query: () => ({
-        url: '/dashboards/overviews',
+        url: '/overviews',
         method: 'GET',
       }),
       providesTags: ['Dashboard'],

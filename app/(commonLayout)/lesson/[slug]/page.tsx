@@ -21,11 +21,10 @@ const ReactPlayer = dynamic(() => import("react-player"), { ssr: false })
 
 export default function LearnPage() {
   const { slug } = useParams()
-  const router = useRouter()
-
+  
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
+  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [isPlaying, setIsPlaying] = useState(false)
@@ -62,13 +61,7 @@ export default function LearnPage() {
     fetchLessons()
   }, [slug, token])
 
-  if (!lessons.length) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-gray-400">
-        {loading ? "Loading lessons..." : error || "No lessons found"}
-      </div>
-    )
-  }
+
 
   const currentLessonIndex = currentLesson
     ? lessons.findIndex((lesson) => lesson.id === currentLesson.id)
@@ -91,9 +84,6 @@ export default function LearnPage() {
     }
   }
 
-  const filteredLessons = lessons.filter((lesson) =>
-    lesson.title.toLowerCase().includes(searchQuery.toLowerCase())
-  )
 
   // ✅ Update lesson progress when video ends
   const updateProgress = async () => {
@@ -121,16 +111,32 @@ export default function LearnPage() {
     }
   }
 
+     // ==============================
+  // 🔹 UI Rendering Logic
+  // ==============================
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#100D28]">
+        <div className="text-center">
+          {/* Spinner Loader */}
+          <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
+          
+        </div>
+      </div>
+    )
+  if (error) return <p className="text-center py-10 text-red-500">{error}</p>
+ 
   return (
-    <div className="min-h-screen container mx-auto bg-gray-900 text-white flex flex-col">
+    <div className="min-h-screen  bg-[#100d28] text-white flex flex-col pb-4">
       {/* Header */}
+      
       <LessonHeader
         currentLessonTitle={currentLesson?.title || ""}
         currentIndex={currentLessonIndex + 1}
         totalLessons={totalLessons}
       />
 
-      <div className="flex flex-1 flex-col md:flex-row">
+      <div className="container mx-auto flex flex-1 flex-col md:flex-row gap-4">
         {/* Main Content */}
         <div className="flex-1 flex flex-col order-2 md:order-1">
           <LessonPlayer
@@ -138,7 +144,7 @@ export default function LearnPage() {
             onEnded={updateProgress}
           />
 
-          <Card className="bg-gray-900 p-4 mt-4 border-none">
+          <Card className="bg-[#080613] p-4 mt-4 border-none">
             {/* Controls */}
             <LessonControls
               onPrev={goToPreviousLesson}
@@ -148,8 +154,8 @@ export default function LearnPage() {
             />
 
             {/* Progress Card */}
-            <div className="bg-gray-800 border-t border-gray-700 p-6 mt-2 md:mt-4 rounded-xl">
-              <h3 className="text-lg font-semibold text-green-500 mb-4">Course Progress</h3>
+            <div className="bg-transparent border border-[#241D59] p-6 mt-2 md:mt-4 rounded-xl">
+              <h3 className="text-lg font-semibold text-[#d8a111] mb-4">Course Progress</h3>
 
               <div className="flex items-center justify-center">
                 <div className="w-32 h-32">
@@ -158,7 +164,7 @@ export default function LearnPage() {
                     text={`${progressPercentage.toFixed(0)}%`}
                     styles={buildStyles({
                       textColor: "#fff",
-                      pathColor: "#16a34a",
+                      pathColor: "#d2a111",
                       trailColor: "#374151",
                     })}
                   />
@@ -184,39 +190,28 @@ export default function LearnPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="w-full md:w-80 bg-gray-900 border-t border-gray-900 md:border-t-0 md:border-l md:flex-shrink-0 order-1 md:order-2">
-          {/* Search */}
-          <div className="p-4 border-b border-gray-700">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                placeholder="Search Lesson"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-              />
-            </div>
-          </div>
+        <div className="w-full md:w-80 bg-[#080613] border-t border-gray-900 md:border-t-0 md:border-l md:flex-shrink-0 order-1 md:order-2">
+
 
           {/* Lessons List */}
           <div className="flex-1 overflow-y-auto">
-            {filteredLessons.map((lesson, index) => (
+            {lessons.map((lesson, index) => (
               <div
                 key={lesson.id}
                 onClick={() => {
                   setCurrentLesson(lesson)
                   setIsPlaying(false)
                 }}
-                className={`p-4 border-b border-gray-700 cursor-pointer hover:bg-gray-700 transition-colors ${
+                className={`p-4 border-b border-[#32287B] cursor-pointer hover:bg-[#32287B] transition-colors ${
                   currentLesson?.id === lesson.id
-                    ? "bg-purple-900/30 border-l-4 border-l-purple-500"
+                    ? "bg-[#241D59] border-l-4 border-l-[#d2a111]"
                     : ""
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-700 text-xs">
                     {lesson.isProgressCompleted ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className="w-4 h-4 text-[#d8a111]" />
                     ) : (
                       <span className="text-gray-400">{index + 1}</span>
                     )}

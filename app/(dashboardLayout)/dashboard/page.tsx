@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
 import { useGetOverViewsQuery } from "@/redux/features/dashboard/dashboardApi"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DollarSign, Users, Calendar, BookOpen, TrendingUp } from "lucide-react"
+import { DollarSign, Users, BookOpen, TrendingUp } from "lucide-react"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,181 +20,185 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Le
 
 export default function DashboardOverview() {
   const user = useSelector(selectCurrentUser)
-  const { data: overviews, isLoading } = useGetOverViewsQuery({})
+  const { data: overview, isLoading } = useGetOverViewsQuery({})
 
-  if (isLoading) return <p>Loading...</p>
-
-  const {
-    totalRevenue,
-    revenueChange,
-    totalUsers,
-    usersChange,
-    totalBookings,
-    bookingsChange,
-    totalServices,
-    servicesChange,
-    analytics,
-    slotStats,
-    myCoursesCount,
-    myEnrollmentsCount,
-    myEarnings,
-    myCourseStats,
-  } = overviews?.data || {}
-
-  // Paid vs Free Chart (example for admin)
-  const paidFreeLabels = ["Paid", "Free"]
-  const paidFreeCounts = [
-    slotStats?.paidCourses || 0,
-    slotStats?.freeCourses || 0,
-  ]
-  const paidFreeData = {
-    labels: paidFreeLabels,
-    datasets: [
-      {
-        label: "Courses",
-        data: paidFreeCounts,
-        backgroundColor: ["#4ade80", "#60a5fa"],
-      },
-    ],
-  }
-
-  // Enrollments Trend (Bar Chart)
-  const enrollLabels = analytics?.weeklyBookings?.map((d: any) => d.week) || []
-  const enrollData = analytics?.weeklyBookings?.map((d: any) => d.count) || []
-  const enrollmentsTrendData = {
-    labels: enrollLabels,
-    datasets: [
-      {
-        label: "Enrollments",
-        data: enrollData,
-        backgroundColor: "rgba(59, 130, 246, 0.7)",
-      },
-    ],
-  }
-
-  // Admin Dashboard
-  if (user?.isAdmin) {
+  if (isLoading)
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage platform data and performance.</p>
-
-        {/* Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <SummaryCard
-            title="Total Earnings"
-            value={`$${totalRevenue ?? 0}`}
-            change={revenueChange}
-            icon={<DollarSign />}
-            color="from-green-500 to-green-600"
-          />
-          <SummaryCard
-            title="Total Users"
-            value={totalUsers ?? 0}
-            change={usersChange}
-            icon={<Users />}
-            color="from-blue-500 to-blue-600"
-          />
-          <SummaryCard
-            title="Total Enrollments"
-            value={totalBookings ?? 0}
-            change={bookingsChange}
-            icon={<Calendar />}
-            color="from-purple-500 to-purple-600"
-          />
-          <SummaryCard
-            title="Total Courses"
-            value={totalServices ?? 0}
-            change={servicesChange}
-            icon={<BookOpen />}
-            color="from-orange-500 to-red-600"
-          />
-        </div>
-
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader><CardTitle>Paid vs Free Courses</CardTitle></CardHeader>
-            <CardContent>
-              {paidFreeCounts.some(c => c > 0) ? <Pie data={paidFreeData} /> : <p>No data</p>}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle>Enrollments Trend</CardTitle></CardHeader>
-            <CardContent>
-              {enrollLabels.length ? <Bar data={enrollmentsTrendData} /> : <p>No data</p>}
-            </CardContent>
-          </Card>
+      <div className="min-h-screen flex items-center justify-center ">
+        <div className="text-center">
+          {/* Spinner Loader */}
+          <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
+          
         </div>
       </div>
     )
+  if (!overview) return <p>No Data Found</p>
+
+  const { data } = overview
+
+  // ---------- Admin Graph Data ----------
+  const monthlyRevenueData = {
+    labels: data?.monthlyStats?.map((m: any) => m.month) || [],
+    datasets: [
+      {
+        label: "Revenue",
+        data: data?.monthlyStats?.map((m: any) => m.revenue) || [],
+        backgroundColor: "rgba(59, 130, 246, 0.6)",
+      },
+      {
+        label: "Payments",
+        data: data?.monthlyStats?.map((m: any) => m.payments) || [],
+        backgroundColor: "rgba(34, 197, 94, 0.6)",
+      },
+    ],
   }
 
-  // User Dashboard
+  const topCoursesData = {
+    labels: data?.topCourses?.map((c: any) => c.title) || [],
+    datasets: [
+      {
+        label: "Enrollments",
+        data: data?.topCourses?.map((c: any) => c.enrollmentsCount) || [],
+        backgroundColor: [
+          "rgba(59,130,246,0.6)",
+          "rgba(34,197,94,0.6)",
+          "rgba(239,68,68,0.6)",
+          "rgba(234,179,8,0.6)",
+          "rgba(168,85,247,0.6)",
+        ],
+      },
+    ],
+  }
+
+  // ---------- User Graph Data ----------
+  const userProgressData = {
+    labels: data?.progressPerCourse?.map((c: any) => c.title) || [],
+    datasets: [
+      {
+        label: "Completed Lessons",
+        data: data?.progressPerCourse?.map((c: any) => c.completedLessons) || [],
+        backgroundColor: "rgba(59,130,246,0.6)",
+      },
+      {
+        label: "Total Lessons",
+        data: data?.progressPerCourse?.map((c: any) => c.totalLessons) || [],
+        backgroundColor: "rgba(234,179,8,0.6)",
+      },
+    ],
+  }
+
+  const monthlyUserProgress = {
+    labels: data?.monthlyProgress?.map((m: any) => m.month) || [],
+    datasets: [
+      {
+        label: "Lessons Completed",
+        data: data?.monthlyProgress?.map((m: any) => m.completedLessons) || [],
+        backgroundColor: "rgba(34,197,94,0.6)",
+      },
+    ],
+  }
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">User Dashboard</h1>
-      <p className="text-gray-600">Your courses and earnings overview.</p>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {/* ---------- ADMIN OVERVIEW ---------- */}
+      {user?.isAdmin && (
+        <>
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users size={20} /> Total Users
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-bold">{data?.totalUsers}</CardContent>
+          </Card>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <SummaryCard
-          title="My Courses"
-          value={myCoursesCount ?? 0}
-          color="from-green-500 to-green-600"
-        />
-        <SummaryCard
-          title="My Enrollments"
-          value={myEnrollmentsCount ?? 0}
-          color="from-blue-500 to-blue-600"
-        />
-        <SummaryCard
-          title="My Earnings"
-          value={`$${myEarnings ?? 0}`}
-          color="from-purple-500 to-purple-600"
-        />
-      </div>
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen size={20} /> Total Courses
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-bold">{data?.totalCourses}</CardContent>
+          </Card>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader><CardTitle>My Course Enrollments Trend</CardTitle></CardHeader>
-          <CardContent>
-            {myCourseStats?.labels?.length ? (
-              <Bar data={{
-                labels: myCourseStats.labels,
-                datasets: [
-                  {
-                    label: "Enrollments",
-                    data: myCourseStats.data,
-                    backgroundColor: "rgba(16, 185, 129, 0.7)",
-                  },
-                ],
-              }} />
-            ) : <p>No data</p>}
-          </CardContent>
-        </Card>
-      </div>
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign size={20} /> Revenue
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-bold">${data?.totalRevenue}</CardContent>
+          </Card>
+
+          <Card className="col-span-2 shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle>Monthly Revenue & Payments</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Bar data={monthlyRevenueData} />
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle>Top 5 Courses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Pie data={topCoursesData} />
+            </CardContent>
+          </Card>
+        </>
+      )}
+
+      {/* ---------- USER OVERVIEW ---------- */}
+      {!user?.isAdmin && (
+        <>
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen size={20} /> Enrolled Courses
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-bold">{data?.enrolledCoursesCount}</CardContent>
+          </Card>
+
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp size={20} /> Completed Lessons
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-bold">{data?.completedLessonsCount}</CardContent>
+          </Card>
+
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign size={20} /> Total Spent
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-2xl font-bold">${data?.totalSpent}</CardContent>
+          </Card>
+
+          <Card className="col-span-2 shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle>Progress per Course</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Bar data={userProgressData} />
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle>Monthly Lesson Completion</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Bar data={monthlyUserProgress} />
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
-  )
-}
-
-function SummaryCard({ title, value, change, icon, color }: any) {
-  return (
-    <Card className={`bg-gradient-to-br ${color} text-white`}>
-      <CardHeader className="flex items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium opacity-90">{title}</CardTitle>
-        {icon}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        {change !== undefined && (
-          <div className="flex items-center text-xs opacity-90">
-            <TrendingUp className="h-3 w-3 mr-1" />
-            +{change}% from last month
-          </div>
-        )}
-      </CardContent>
-    </Card>
   )
 }

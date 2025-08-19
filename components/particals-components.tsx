@@ -31,7 +31,7 @@ export function ParticlesComponent() {
         interactivity: {
           events: {
             onClick: {
-              enable: false, // No click interaction
+              enable: true, // No click interaction
               mode: "push",
             },
             onHover: {
@@ -49,7 +49,7 @@ export function ParticlesComponent() {
         },
         particles: {
           color: {
-            value: "#ffffff", // White particles
+            value: "#d8a111", // White particles
           },
           links: {
             enable: false, // No links between particles

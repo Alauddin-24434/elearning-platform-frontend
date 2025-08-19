@@ -13,7 +13,7 @@ export default function LessonPlayer({ video, onEnded }: LessonPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
 
   return (
-    <div className="relative w-full aspect-video bg-black flex items-center justify-center">
+    <div className="relative w-full  aspect-video bg-black flex items-center justify-center">
       {video ? (
         <>
           <ReactPlayer

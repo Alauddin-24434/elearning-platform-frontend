@@ -38,7 +38,7 @@ const baseQueryWithReauth: typeof baseQuery = async (
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 401) {
-    // console.warn('⚠️ 401 Unauthorized — trying to refresh token');
+    console.warn('⚠️ 401 Unauthorized — trying to refresh token');
 
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();

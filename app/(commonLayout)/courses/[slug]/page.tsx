@@ -100,11 +100,11 @@ export default function CourseDetails() {
   // ==============================
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#100D28]">
         <div className="text-center">
           {/* Spinner Loader */}
-          <div className="w-16 h-16 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading amazing content...</p>
+          <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
+          
         </div>
       </div>
     )
@@ -113,7 +113,7 @@ export default function CourseDetails() {
   if (!course) return <p className="text-center py-10">Course not found.</p>
 
   return (
-    <div className="min-h-screen container mx-auto">
+    <div className="min-h-screen bg-[#100d28]">
       {/* ✅ Hero Section with Enroll/Continue actions */}
       <CourseDetailsHero
         course={course}

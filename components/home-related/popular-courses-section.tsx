@@ -16,7 +16,7 @@ export default function PopularCoursesSection() {
   const skeletons = Array(6).fill(0)
 
   return (
-    <section className="py-16 bg-gray-900 text-white">
+    <section className="py-16 bg-[#100d28] text-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row items-center justify-between mb-12 text-center md:text-left gap-4">

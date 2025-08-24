@@ -15,11 +15,20 @@ const enrollmentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Enrollment'], 
     }),
+        getEnrollmentsByUserId: build.query({
+      query: (userId) => ({
+        url: `/enrollments/user/${userId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Course'],
+    }),
+
   }),
 });
 
 export const {
   useEnrollCourseMutation,
+  useGetEnrollmentsByUserIdQuery
 } = enrollmentApi;
 
 export default enrollmentApi;

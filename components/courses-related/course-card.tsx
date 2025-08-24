@@ -2,27 +2,18 @@ import Image from "next/image"
 import Link from "next/link"
 import { BookOpen, Users } from "lucide-react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Course } from "@/types"
 
 interface CourseCardProps {
-  course: {
-    id: string
-    title: string
-    thumbnail?: string
-    price: number
-    isFree: boolean
-    author?: { name?: string }
-    category?: { name?: string }
-    lessons?: { id: string }[]
-    enrollments?: { id: string }[]
-  }
+  course: Course;
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
-  const lessonCount = course.lessons?.length ?? 0
-  const studentCount = course.enrollments?.length ?? 0
+  const lessonCount = course.lessonsCount?? 0
+  const studentCount = course.enrollmentsCount ?? 0
 
   return (
-    <Card className="overflow-hidden rounded-xl p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[300px]">
+    <Card className="overflow-hidden rounded-none p-0  bg-white shadow-xl  border-none hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 max-w-[350px]">
       <Link href={`/courses/${course.id}`}>
         
         {/* Thumbnail */}

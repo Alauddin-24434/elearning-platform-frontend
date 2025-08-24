@@ -60,13 +60,13 @@ const CourseDetailsHero = ({
               <div className="flex items-center gap-2">
                 <Users className="w-5 h-5 text-[#D8A111]" />
                 <span className="font-medium text-sm sm:text-base">
-                  {course.enrollments?.length?.toLocaleString() ?? 0} students
+                  {course.enrollmentsCount ?? 0} students
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-[#D8A111]" />
                 <span className="font-medium text-sm sm:text-base">
-                  {course.lessons?.length ?? 0} lessons
+                  {course.lessonsCount ?? 0} lessons
                 </span>
               </div>
             </div>

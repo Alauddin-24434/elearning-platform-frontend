@@ -8,7 +8,7 @@ type CourseDetailsMainProps = {
 }
 
 const CourseDetailsMainSection = ({ course }: CourseDetailsMainProps) => {
-    console.log(course)
+    
     return (
         <section className="flex flex-col container mx-auto">
             {/* ======================
@@ -24,9 +24,9 @@ const CourseDetailsMainSection = ({ course }: CourseDetailsMainProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {course.features?.map((feature, index) => (
+                        {course.features?.map((feature) => (
                             <div
-                                key={index}
+                                key={feature}
                                 className="flex items-center gap-3 p-3 rounded-lg bg-[#080613]"
                             >
                                 {/* ✅ Green check icon for each feature */}
@@ -49,13 +49,13 @@ const CourseDetailsMainSection = ({ course }: CourseDetailsMainProps) => {
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-wrap gap-2">
-                        {course.stack?.map(tech => (
-                            <Badge
+                        {course.stack?.map((tech) => (
+                            <div
                                 key={tech} // unique key
-                                className="bg-[#d8a111] !text-white px-3 py-1 rounded-md text-sm md:text-base hover:bg-green-700 transition-colors"
+                                className="bg-[#d8a111] text-[#100d28] px-3 py-1 rounded-md text-sm md:text-base "
                             >
-                                {tech}
-                            </Badge>
+                                <span className="font-medium ">{tech}</span>
+                            </div>
                         ))}
                     </div>
 

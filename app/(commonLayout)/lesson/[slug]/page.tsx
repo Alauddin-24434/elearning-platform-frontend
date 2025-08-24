@@ -1,71 +1,45 @@
 "use client"
+
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
-
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { Search, CheckCircle, Clock } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Progress } from "@/components/ui/progress"
 import dynamic from "next/dynamic"
-import { Lesson } from "@/types"
+import { useState, useEffect } from "react"
+import { useParams } from "next/navigation"
+import { CheckCircle, Clock } from "lucide-react"
 import { Card } from "@/components/ui/card"
+import { Lesson } from "@/types"
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
 
 import LessonHeader from "@/components/lesson-related/lesson-header"
 import LessonPlayer from "@/components/lesson-related/lesson-player"
 import LessonControls from "@/components/lesson-related/lesson-controlls"
+import { useGetLessonsBySlugQuery, useUpdateLessonProgressMutation } from "@/redux/features/lession/lessonApi"
+
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false })
 
 export default function LearnPage() {
   const { slug } = useParams()
-  
+ 
+  const { data, isLoading, isError } = useGetLessonsBySlugQuery(slug)
+  const [updateProgress] = useUpdateLessonProgressMutation()
+
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null)
-  
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const token = useSelector((state: RootState) => state.learningAuth.token)
-
   useEffect(() => {
-    if (!slug) return
-
-    const fetchLessons = async () => {
-      try {
-        setLoading(true)
-        const res = await fetch(`https://learning-platform-backend-production-839d.up.railway.app/api/lessons/${slug}`, {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `${token}`,
-          },
-        })
-
-        if (!res.ok) throw new Error("Failed to fetch course lessons")
-        const data = await res.json()
-
-        setLessons(data?.data || [])
-        if (data?.data?.length > 0) {
-          setCurrentLesson(data.data[0])
-        }
-      } catch (err: any) {
-        setError(err.message || "An error occurred")
-      } finally {
-        setLoading(false)
-      }
+    if (data?.data) {
+      setLessons(data.data)
+      setCurrentLesson((prev) => prev || data.data[0])
     }
-
-    fetchLessons()
-  }, [slug, token])
-
-
+  }, [data])
 
   const currentLessonIndex = currentLesson
     ? lessons.findIndex((lesson) => lesson.id === currentLesson.id)
     : 0
+
   const totalLessons = lessons.length
   const completedLessons = lessons.filter((lesson) => lesson.isProgressCompleted).length
   const progressPercentage = (completedLessons / totalLessons) * 100
@@ -84,22 +58,10 @@ export default function LearnPage() {
     }
   }
 
-
-  // ✅ Update lesson progress when video ends
-  const updateProgress = async () => {
+  const handleVideoEnd = async () => {
     if (!currentLesson) return
     try {
-      await fetch("https://learning-platform-backend-production-839d.up.railway.app/api/lessons/progress", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `${token}`,
-        },
-        body: JSON.stringify({
-          lessonId: currentLesson.id,
-          courseId: currentLesson.courseId,
-        }),
-      })
+      await updateProgress({ lessonId: currentLesson.id, courseId: currentLesson.courseId }).unwrap()
 
       setLessons((prev) =>
         prev.map((l) =>
@@ -111,25 +73,17 @@ export default function LearnPage() {
     }
   }
 
-     // ==============================
-  // 🔹 UI Rendering Logic
-  // ==============================
-  if (loading)
+  if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#100D28]">
-        <div className="text-center">
-          {/* Spinner Loader */}
-          <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
-          
-        </div>
+        <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
       </div>
     )
-  if (error) return <p className="text-center py-10 text-red-500">{error}</p>
- 
+
+  if (isError) return <p className="text-center py-10 text-red-500">Failed to load lessons</p>
+
   return (
-    <div className="min-h-screen  bg-[#100d28] text-white flex flex-col pb-4">
-      {/* Header */}
-      
+    <div className="min-h-screen bg-[#100d28] text-white flex flex-col pb-4">
       <LessonHeader
         currentLessonTitle={currentLesson?.title || ""}
         currentIndex={currentLessonIndex + 1}
@@ -141,11 +95,10 @@ export default function LearnPage() {
         <div className="flex-1 flex flex-col order-2 md:order-1">
           <LessonPlayer
             video={currentLesson?.video || ""}
-            onEnded={updateProgress}
+            onEnded={handleVideoEnd}
           />
 
           <Card className="bg-[#080613] p-4 mt-4 border-none">
-            {/* Controls */}
             <LessonControls
               onPrev={goToPreviousLesson}
               onNext={goToNextLesson}
@@ -153,10 +106,8 @@ export default function LearnPage() {
               disableNext={currentLessonIndex === totalLessons - 1}
             />
 
-            {/* Progress Card */}
             <div className="bg-transparent border border-[#241D59] p-6 mt-2 md:mt-4 rounded-xl">
               <h3 className="text-lg font-semibold text-[#d8a111] mb-4">Course Progress</h3>
-
               <div className="flex items-center justify-center">
                 <div className="w-32 h-32">
                   <CircularProgressbar
@@ -191,9 +142,6 @@ export default function LearnPage() {
 
         {/* Sidebar */}
         <div className="w-full md:w-80 bg-[#080613] border-t border-gray-900 md:border-t-0 md:border-l md:flex-shrink-0 order-1 md:order-2">
-
-
-          {/* Lessons List */}
           <div className="flex-1 overflow-y-auto">
             {lessons.map((lesson, index) => (
               <div
@@ -203,9 +151,7 @@ export default function LearnPage() {
                   setIsPlaying(false)
                 }}
                 className={`p-4 border-b border-[#32287B] cursor-pointer hover:bg-[#32287B] transition-colors ${
-                  currentLesson?.id === lesson.id
-                    ? "bg-[#241D59] border-l-4 border-l-[#d2a111]"
-                    : ""
+                  currentLesson?.id === lesson.id ? "bg-[#241D59] border-l-4 border-l-[#d2a111]" : ""
                 }`}
               >
                 <div className="flex items-start gap-3">

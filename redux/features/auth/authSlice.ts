@@ -7,8 +7,9 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phone:string;
   isAdmin:boolean;
-  avatar?: string
+  avatar: string
 }
 
 // Redux auth state

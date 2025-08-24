@@ -2,86 +2,124 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#080613] text-white py-10">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Links section */}
-        <div className="flex flex-col sm:flex-row justify-between gap-8 mb-10">
-          {/* Column 1 */}
-          <div>
-            <h5 className="text-white text-lg font-semibold mb-4">Learning</h5>
-            <ul className="space-y-3">
-              {["Home", "About", "Pricing", "Pro Version"].map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="hover:text-amber-400 transition-colors duration-300"
-                  >
-                    {item}
+     <footer className="bg-[#100d28] border-t border-slate-800 py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-white">Learning</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Home
                   </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 2 */}
-          <div>
-            <h5 className="text-white text-lg font-semibold mb-4">Products</h5>
-            <ul className="space-y-3">
-              {[
-                "Figma UI System",
-                "Icons Assets",
-                "Responsive Blocks",
-                "Components Library",
-              ].map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="hover:text-amber-400 transition-colors duration-300"
-                  >
-                    {item}
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    About
                   </a>
                 </li>
-              ))}
-            </ul>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Pro Version
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-white">Products</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Figma UI System
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Icons Assets
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Responsive Blocks
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Components Library
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-white">Resources</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    FAQs
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Quick Start
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Documentation
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    User Guide
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-white">Support</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Contact Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Community
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-400 transition-colors">
+                    Status
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Column 3 */}
-          <div>
-            <h5 className="text-white text-lg font-semibold mb-4">Resources</h5>
-            <ul className="space-y-3">
-              {["FAQs", "Quick Start", "Documentation", "User Guide"].map(
-                (item) => (
-                  <li key={item}>
-                    <a
-                      href="#"
-                      className="hover:text-amber-400 transition-colors duration-300"
-                    >
-                      {item}
-                    </a>
-                  </li>
-                )
-              )}
-            </ul>
+          <div className=" mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-slate-400 text-sm">© 2025 Learning. All rights reserved.</p>
+            <p className="text-slate-400 text-sm mt-4 md:mt-0">
+              Have a question?{" "}
+              <a href="#" className="text-yellow-400 hover:underline">
+                Talk to us
+              </a>
+            </p>
           </div>
         </div>
-
-        {/* Bottom section */}
-        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-700 pt-6 text-sm">
-          <p>
-            © {new Date().getFullYear()}{" "}
-            <a href="/" className="hover:text-amber-400">
-              Learning
-            </a>
-            . All rights reserved.
-          </p>
-          <p className="mt-4 sm:mt-0">
-            Have a question?{" "}
-            <a href="mailto:support@pagedone.io" className="hover:text-amber-400">
-              Talk to us
-            </a>
-          </p>
-        </div>
-      </div>
-    </footer>
+      </footer>
   );
 }

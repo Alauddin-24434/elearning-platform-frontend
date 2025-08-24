@@ -54,7 +54,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const navItems = user.isAdmin ? adminNavItems : userNavItems
 
   return (
-    <Sidebar collapsible="icon" {...props} className="bg-[#100D28] text-white">
+    <Sidebar collapsible="icon" {...props} className="bg-[#080613]  text-white">
       {/* Sidebar Header with logo only */}
       <SidebarHeader className="flex justify-center items-center h-16">
         <Link href="/">

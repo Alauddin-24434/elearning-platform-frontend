@@ -26,13 +26,13 @@ export default function Header() {
         {/* Logo */}
 
         <Link href="/" className="flex items-center gap-2">
-  <Image
-  src="/logo.png"
-  alt="Learning Hub Logo"
-  width={60}   
-  height={60} 
-  className="rounded-md"
-/>
+          <Image
+            src="/logo.png"
+            alt="Learning Hub Logo"
+            width={100}
+            height={100}
+            className="rounded-md"
+          />
 
 
 
@@ -103,14 +103,14 @@ export default function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44 mt-5 bg-gray-50">
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard" className="flex items-center gap-2">
+                  <Link href="/dashboard" className="flex items-center cursor-pointer hover:bg-gray-400 gap-2">
                     <LayoutDashboard className="w-4 h-4" />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => dispatch(logout())}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-2 cursor-pointer hover:bg-red-500"
                 >
                   <LogOut className="w-4 h-4" />
                   Logout
@@ -120,12 +120,12 @@ export default function Header() {
           ) : (
             <div className="hidden md:flex gap-2">
               <Link href="/login">
-                <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#00483d]">
+                <Button variant="outline" className="text-white  hover:bg-[#caca23]   hover:text-[#100d28] cursor-pointer">
                   Login
                 </Button>
               </Link>
               <Link href="/signup">
-                <Button className="bg-[#d8a111] text-[#100d28]">
+                <Button className="bg-[#d8a111] hover:bg-[#caca23] text-[#100d28] cursor-pointer">
                   Sign Up
                 </Button>
               </Link>

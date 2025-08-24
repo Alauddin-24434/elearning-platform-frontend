@@ -5,9 +5,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  password?: string; // Optional for client-side display
-  avatar?: string;
-  coverPhoto?: string;
+  avatar: string;
   isAdmin: boolean;
   isActive: boolean;
   createdAt: Date;
@@ -34,29 +32,18 @@ export interface Course {
   features: string[]
   overviews: string[]
   stack: string[]
-  overviewVideo: string   // ✅ Added
-  author: {
-    id: string
-    name: string
-    email: string
-    avatar: string | null
-    isAdmin: boolean
-    isActive: boolean
-    createdAt: string
-    updatedAt: string
-  }
-  category: {
-    id: string
-    name: string
-  }
-  lessons: Lesson [];
+  overviewVideo: string  
+  author:User
+  category: Category
+  lessons: Lesson
   enrollments: {
     id: string
     userId: string
     courseId: string
     enrolledAt: string
   }[]
-
+ lessonsCount:number
+ enrollmentsCount:number
 }
 
 export interface Enrollment {

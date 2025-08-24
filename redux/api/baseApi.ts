@@ -20,7 +20,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as any).learningAuth.token;
     if (token) {
-      headers.set('authorization', `${token}`);
+      headers.set('authorization', `Bearer ${token}`);
     }
     return headers;
   },
@@ -33,7 +33,7 @@ const baseQueryWithReauth: typeof baseQuery = async (
 ) => {
   await mutex.waitForUnlock();
 
-  // console.log('🔵 API Request Initiated:', args);
+  console.log('🔵 API Request Initiated:', args);
 
   let result = await baseQuery(args, api, extraOptions);
 
@@ -43,7 +43,7 @@ const baseQueryWithReauth: typeof baseQuery = async (
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
       try {
-        // console.log('🔁 Attempting token refresh...');
+        console.log('🔁 Attempting token refresh...');
 
         const refreshResult = await baseQuery(
           { url: '/auth/refresh-token', method: 'POST' },
@@ -51,7 +51,7 @@ const baseQueryWithReauth: typeof baseQuery = async (
           extraOptions,
         );
 
-        // console.log('🔁 Refresh Response:', refreshResult);
+        console.log('🔁 Refresh Response:', refreshResult);
 
         const resultData = refreshResult.data as IRefreshResponse;
 
@@ -59,25 +59,25 @@ const baseQueryWithReauth: typeof baseQuery = async (
           const newToken = resultData.data.accessToken;
           const user = resultData.data.user;
 
-          // console.log('✅ Token refreshed. Retrying original request...');
+          console.log('✅ Token refreshed. Retrying original request...');
 
           api.dispatch(setCredintials({ user, token: newToken }));
           result = await baseQuery(args, api, extraOptions);
         } else {
-          // console.error('❌ Refresh token failed. Logging out...');
+          console.error('❌ Refresh token failed. Logging out...');
           api.dispatch(logout());
         }
       } finally {
         release();
       }
     } else {
-      // console.log('⏳ Waiting for mutex unlock...');
+      console.log('⏳ Waiting for mutex unlock...');
       await mutex.waitForUnlock();
       result = await baseQuery(args, api, extraOptions);
     }
   }
 
-  // console.log('🟢 Final API Response:', result);
+  console.log('🟢 Final API Response:', result);
   return result;
 };
 
@@ -91,7 +91,9 @@ const baseApi = createApi({
     'Dashboard',
     'Payment',
     'Category',
-    'Enrollment'
+    'Enrollment',
+    'Lesson',
+    'Review'
   ],
   endpoints: () => ({}),
 });

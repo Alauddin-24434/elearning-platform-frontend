@@ -20,7 +20,9 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Le
 
 export default function DashboardOverview() {
   const user = useSelector(selectCurrentUser)
-  const { data: overview, isLoading } = useGetOverViewsQuery({})
+  const { data: overview, isLoading } = useGetOverViewsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  })
 
   if (isLoading)
     return (
@@ -28,13 +30,14 @@ export default function DashboardOverview() {
         <div className="text-center">
           {/* Spinner Loader */}
           <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
-          
+
         </div>
       </div>
     )
   if (!overview) return <p>No Data Found</p>
 
   const { data } = overview
+  console.log(data)
 
   // ---------- Admin Graph Data ----------
   const monthlyRevenueData = {
@@ -70,35 +73,39 @@ export default function DashboardOverview() {
     ],
   }
 
-  // ---------- User Graph Data ----------
-  const userProgressData = {
-    labels: data?.progressPerCourse?.map((c: any) => c.title) || [],
+
+
+
+
+  // ----------------- User Charts -----------------
+
+  // Revenue Comparison Data
+  const revenueComparisonData = {
+    labels: ["Weekly", "Monthly", "Yearly", "Total"],
     datasets: [
       {
-        label: "Completed Lessons",
-        data: data?.progressPerCourse?.map((c: any) => c.completedLessons) || [],
-        backgroundColor: "rgba(59,130,246,0.6)",
-      },
-      {
-        label: "Total Lessons",
-        data: data?.progressPerCourse?.map((c: any) => c.totalLessons) || [],
-        backgroundColor: "rgba(234,179,8,0.6)",
+        
+        data: [
+          data?.weeklyRevenue || 0,
+          data?.monthlyRevenue || 0,
+          data?.yearlyRevenue || 0,
+          data?.totalRevenue || 0,
+        ],
+        backgroundColor: [
+          "rgba(59,130,246,0.6)", // blue
+          "rgba(34,197,94,0.6)",  // green
+          "rgba(234,179,8,0.6)",  // yellow
+          "rgba(239,68,68,0.6)",  // red
+        ],
       },
     ],
   }
 
-  const monthlyUserProgress = {
-    labels: data?.monthlyProgress?.map((m: any) => m.month) || [],
-    datasets: [
-      {
-        label: "Lessons Completed",
-        data: data?.monthlyProgress?.map((m: any) => m.completedLessons) || [],
-        backgroundColor: "rgba(34,197,94,0.6)",
-      },
-    ],
-  }
+
+ 
 
   return (
+    <div>
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {/* ---------- ADMIN OVERVIEW ---------- */}
       {user?.isAdmin && (
@@ -150,13 +157,29 @@ export default function DashboardOverview() {
         </>
       )}
 
-      {/* ---------- USER OVERVIEW ---------- */}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {/* ----------------- USER VIEW ----------------- */}
       {!user?.isAdmin && (
         <>
+          {/* Key Cards */}
           <Card className="shadow-md rounded-xl border border-gray-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BookOpen size={20} /> Enrolled Courses
+                <BookOpen size={20} /> My Enrolled Courses
               </CardTitle>
             </CardHeader>
             <CardContent className="text-2xl font-bold">{data?.enrolledCoursesCount}</CardContent>
@@ -165,40 +188,94 @@ export default function DashboardOverview() {
           <Card className="shadow-md rounded-xl border border-gray-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp size={20} /> Completed Lessons
+                <TrendingUp size={20} /> My Created Courses
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-bold">{data?.completedLessonsCount}</CardContent>
+            <CardContent className="text-2xl font-bold">{data?.createdCoursesCount}</CardContent>
           </Card>
 
           <Card className="shadow-md rounded-xl border border-gray-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <DollarSign size={20} /> Total Spent
+                <DollarSign size={20} /> My Total Spent
               </CardTitle>
             </CardHeader>
             <CardContent className="text-2xl font-bold">${data?.totalSpent}</CardContent>
           </Card>
-
-          <Card className="col-span-2 shadow-md rounded-xl border border-gray-100">
-            <CardHeader>
-              <CardTitle>Progress per Course</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Bar data={userProgressData} />
-            </CardContent>
-          </Card>
-
           <Card className="shadow-md rounded-xl border border-gray-100">
             <CardHeader>
-              <CardTitle>Monthly Lesson Completion</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign size={20} /> My Total Revenue
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <Bar data={monthlyUserProgress} />
+            <CardContent className="text-2xl font-bold">${data?.totalRevenue}</CardContent>
+          </Card>
+
+          {/* Revenue Comparison Chart */}
+          <Card className="col-span-2 shadow-md rounded-xl border border-gray-100">
+            <CardHeader>
+              <CardTitle>Revenue Comparison</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center gap-4">
+              <Bar
+                data={revenueComparisonData}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: { display:false },
+                    tooltip: { enabled: true },
+                  },
+                  scales: {
+                    y: { beginAtZero: true },
+                  },
+                }}
+                className="w-full lg:w-4/5 h-80"
+              />
+
+              {/* Show exact revenue outside chart */}
+              <div className="flex justify-around w-full mt-4 text-gray-700 font-semibold">
+                <span>Weekly: ${data?.weeklyRevenue || 0}</span>
+                <span>Monthly: ${data?.monthlyRevenue || 0}</span>
+                <span>Yearly: ${data?.yearlyRevenue || 0}</span>
+                <span>Total: ${data?.totalRevenue || 0}</span>
+              </div>
             </CardContent>
           </Card>
+
+          {/* Enrollments & Revenue per Course Table */}
+          {data?.enrollmentsPerCourse?.length > 0 && (
+            <Card className="col-span-2 shadow-md rounded-xl border border-gray-100">
+              <CardHeader>
+                <CardTitle>Enrollments & Revenue per Course</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mt-6 overflow-x-auto">
+                  <table className="w-full text-left border border-gray-200 rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-2 text-gray-700">Course</th>
+                        <th className="px-4 py-2 text-gray-700">Enrollments</th>
+                        <th className="px-4 py-2 text-gray-700">Revenue ($)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.enrollmentsPerCourse.map((c: any) => (
+                        <tr key={c.courseId} className="hover:bg-gray-100">
+                          <td className="px-4 py-2">{c.title}</td>
+                          <td className="px-4 py-2">{c.enrollments}</td>
+                          <td className="px-4 py-2">{c.revenue}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </>
       )}
     </div>
+    </div>
+
   )
 }

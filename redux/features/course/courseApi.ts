@@ -30,9 +30,9 @@ const courseApi = baseApi.injectEndpoints({
       providesTags: ['Course'],
     }),
 
-    getMyCourses: build.query({
-      query: () => ({
-        url: '/courses/my-courses',
+    getCoursesByAuthor: build.query({
+      query: (authorId) => ({
+        url: `/courses/author/${authorId}`,
         method: 'GET',
       }),
       providesTags: ['Course'],
@@ -40,11 +40,11 @@ const courseApi = baseApi.injectEndpoints({
 
     // 🔹 Get single course by ID
     getCourseById: build.query({
-      query: (id: string) => ({
-        url: `/courses/${id}`,
+      query: (slug) => ({
+        url: `/courses/${slug}`,
         method: 'GET',
       }),
-      providesTags: (_result, _error, id) => [{ type: 'Course', id }],
+      providesTags: ["Course"],
     }),
 
     // 🔹 Create a new course
@@ -58,22 +58,22 @@ const courseApi = baseApi.injectEndpoints({
     }),
 
     // 🔹 Update course by ID
-    updateCourse: build.mutation({
-      query: ({ id, ...data }) => ({
-        url: `/courses/${id}`,
-        method: 'PATCH',
-        body: data,
-      }),
-      invalidatesTags: [
-        
-        'Course',
-      ],
-    }),
+updateCourse: build.mutation<Course, { id: string; data: any }>({
+  query: ({ id, data }) => {
+    console.log("Updating course:", id, data); // ✅ debug payload
+    return {
+      url: `/courses/${id}`,
+      method: "PATCH",
+      body: data, // send JSON body directly
+    }
+  },
+})
+,
 
     // 🔹 Delete course by ID
     deleteCourse: build.mutation({
       query: (id: string) => ({
-        url: `/courses/${id}`,
+        url: `/courses/${id}/delete`,
         method: 'DELETE',
       }),
       invalidatesTags:[
@@ -90,7 +90,7 @@ export const {
   useCreateCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
-  useGetMyCoursesQuery
+useGetCoursesByAuthorQuery
 } = courseApi;
 
 export default courseApi;

@@ -6,74 +6,48 @@ import { useEnrollCourseMutation } from "@/redux/features/enrollment/enrollmentA
 import { useSelector } from "react-redux"
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
 import CourseDetailsHero from "@/components/courses-related/course-details/details-heroSection"
-import { Course } from "@/types"
 import CourseDetailsMainSection from "@/components/courses-related/course-details/details-mainSection"
+import { useGetCourseByIdQuery } from "@/redux/features/course/courseApi"
+import ReviewSection from "@/components/courses-related/review-section"
 
 export default function CourseDetails() {
-  // ✅ Extract course slug from dynamic route
   const { slug } = useParams()
 
-  // ✅ Local state management
-  const [course, setCourse] = useState<Course | null>(null) // Store course details
-  const [enrolled, setEnrolled] = useState(false) // Track enrollment status
-  const [loading, setLoading] = useState(false) // Loading state for UI feedback
-  const [error, setError] = useState("") // Error message state
-
-  // ✅ Get logged-in user from Redux store
+  // ✅ Get logged-in user
   const user = useSelector(selectCurrentUser)
   const userId = user?.id
-
-  // ✅ Router instance for navigation
   const router = useRouter()
 
-  // ✅ Enrollment mutation hook
   const [enrollCourse] = useEnrollCourseMutation()
 
-  // ==============================
-  // 🔹 Fetch course details on mount or when slug/user changes
-  // ==============================
+  // 🔹 Fetch course data
+  const { data: courseResponse, isLoading: courseLoading, error } = useGetCourseByIdQuery(slug)
+  const course = courseResponse?.data;
+
+
+  // ✅ Private route check with redirect memory
   useEffect(() => {
-    if (!slug) return
-
-    const fetchCourse = async () => {
-      try {
-        setLoading(true)
-
-        // 🔹 Fetch course details from API
-        const res = await fetch(
-          `https://learning-platform-backend-production-839d.up.railway.app/api/courses/${slug}`
-        )
-        if (!res.ok) throw new Error("Failed to fetch course details")
-
-        const data = await res.json()
-        setCourse(data?.data)
-
-        // 🔹 Check if current user is already enrolled
-        const isUserEnrolled = data?.data?.enrollments?.some(
-          (enrollment: any) => enrollment.userId === user?.id
-        )
-        setEnrolled(isUserEnrolled)
-      } catch (err: any) {
-        setError(err.message || "An error occurred")
-      } finally {
-        setLoading(false)
-      }
+    if (user === null) {
+      router.push(`/login?redirect=/courses/${slug}`)
     }
+  }, [user, slug, router])
+  // ✅ Enrolled state (sync with course data when it arrives)
+  const [enrolled, setEnrolled] = useState(false)
+  useEffect(() => {
+    if (course?.isEnrolled) {
+      setEnrolled(true)
+    } else {
+      setEnrolled(false)
+    }
+  }, [course?.isEnrolled])
 
-    fetchCourse()
-  }, [slug, user?.id])
-
-  // ==============================
+  // =========================
   // 🔹 Handle Course Enrollment
-  // ==============================
+  // =========================
   const handleEnroll = async () => {
-    if (!user) {
-      // If user not logged in → redirect to login page
-      return router.push("/login")
-    }
+    if (!user) return router.push(`/login?redirect=/courses/${slug}`)
 
     if (course?.isFree) {
-      // 🔹 Direct enrollment for free courses
       const body = { userId, courseId: course.id }
       try {
         await enrollCourse(body).unwrap()
@@ -83,47 +57,38 @@ export default function CourseDetails() {
         alert("Enrollment failed, please try again.")
       }
     } else {
-      // 🔹 Redirect to checkout page for paid courses
       router.push(`/checkout/${slug}`)
     }
   }
 
-  // ==============================
-  // 🔹 Continue to Lessons if Enrolled
-  // ==============================
   const handleContinue = () => {
     router.push(`/lesson/${slug}`)
   }
 
-  // ==============================
-  // 🔹 UI Rendering Logic
-  // ==============================
-  if (loading)
+  // =========================
+  // 🔹 Loading UI
+  // =========================
+  if (!user || courseLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#100D28]">
-        <div className="text-center">
-          {/* Spinner Loader */}
-          <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin mx-auto mb-4"></div>
-          
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#100d28] text-white">
+        <div className="w-16 h-16 border-4 border-[#EFBD3E] border-t-[#97700C] rounded-full animate-spin"></div>
       </div>
     )
+  }
 
-  if (error) return <p className="text-center py-10 text-red-500">{error}</p>
-  if (!course) return <p className="text-center py-10">Course not found.</p>
+  if (error) return <p className="text-center text-red-500 mt-10">Failed to load course.</p>
 
   return (
     <div className="min-h-screen bg-[#100d28]">
-      {/* ✅ Hero Section with Enroll/Continue actions */}
       <CourseDetailsHero
         course={course}
         enrolled={enrolled}
         onEnroll={handleEnroll}
         onContinue={handleContinue}
       />
-
-      {/* ✅ Main Course Content Section */}
       <CourseDetailsMainSection course={course} />
+
+      {/* <ReviewSection courseId={course.id} /> */}
     </div>
   )
 }
